@@ -1,17 +1,17 @@
 define(['duplicator'], function(Duplicator) {
 
-  var settings1 = {
+  var settings = {
   	name: 'firstNode',
-  	initialNodeSelector: ".initial-node-wrapper"
+    initialNodeSelector: ".initial-node-wrapper",
+    targetWrapperSelector: ".core-wrapper",
+
+    actionButtons: {
+      addButtonSelector: ".add-node",
+      deleteButtonSelector: ".delete-node"
+    }
   }
 
-  var settings2 = {
-  	name: 'secondNode',
-  	initialNodeSelector: ".initial-node-wrapper"
-  }
 
-  var nodeDuplicator = new Duplicator(settings1);
-  var otherNodeDuplicator = new Duplicator(settings2);
-
-  debugger;
+  var nodeDuplicator = new Duplicator(settings);
+  nodeDuplicator.addNode();
 });
