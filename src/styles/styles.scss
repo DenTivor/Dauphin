@@ -1,0 +1,28 @@
+@import "src/styles/vendor/bootstrap";
+@import "src/styles/mixins";
+
+
+html, body {
+	// height: 100%;
+	// overflow: hidden;
+}
+
+.form-line {
+	margin-bottom: 10px;
+
+	.label {
+	    line-height: 36px;
+	}
+}
+
+
+.initial-node {
+	width: 600px;
+}
+
+.node-cell {
+	float: left;
+}
+
+.node-management {margin-top: 23px; margin-left: 20px;}
+.node-management .btn {margin-left: 10px;}

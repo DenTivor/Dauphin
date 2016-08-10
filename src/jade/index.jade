@@ -1,0 +1,24 @@
+extends ./tpl/_base
+include ./mixins/mixins
+
+block content
+	h2 Dauphin: duplicate and collect!
+
+	.core-wrapper.form-group
+
+
+	.initial-node-wrapper
+		.initial-node.clearfix
+			.node-elements.node-cell
+				.row.form-line
+					label.col-md-5.label Your name
+					.input-wrapper.col-md-7
+						input.form-control.name(type="text",placeholder="Your name here") 
+				.row.form-line
+					label.col-md-5.label Your surname
+					.input-wrapper.col-md-7
+						input.form-control.surname(type="text",placeholder="Your surname here") 
+			.node-management.node-cell
+				a.btn.btn-primary.add-node(href="javascript:void(0)", role="button") Add 
+				a.btn.btn-primary.delete-node(href="javascript:void(0)", role="button") Delete 
+	
