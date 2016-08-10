@@ -1,0 +1,1325 @@
+ABC.addController("dataValuesController", function(screen) {
+
+	var controller = (function(){
+
+		function controller(settings) {
+
+			var generatedUI;
+
+			var sourceEl;
+
+			var select2ContainerSelector;
+
+
+
+			this.targetSelectedSelector = settings.targetSelectedSelector;
+
+			this.plNewFieldRequestName = this.plNewFieldRequestName;
+
+			this.plNewFieldRequestAttr = this.plNewFieldRequestAttr;
+
+			this.handleDeleteButton = settings.handleDeleteButton;
+
+			this.targetSelector = settings.targetSelector;
+
+			this.sourceSelector = settings.sourceSelector;
+
+			this.buttonsWrapper = settings.buttonsWrapper;
+
+			this.addToModel 	= settings.addToModel;
+
+			this.subElements = settings.subElements;
+
+			this.wrapper = $(this.targetSelector);
+
+			this.statusMap = settings.statusMap;
+
+			this.currentValuesSelector = settings.currentValuesSelector;
+
+			this.showItemTpl = settings.showItemTpl; 
+
+			this.showChildItemTpl = settings.showChildItemTpl;
+
+			this.currentNodeRequestsSelector = settings.currentNodeRequestsSelector;
+
+			
+
+			this.availValueRequestsMap  = [];
+
+			this.selectedValuesArray = [];
+
+			this.availValuesMap = [];
+
+			this.availIdsArray = [];
+
+			
+
+			select2ContainerSelector = this.sourceSelector + " span.select2-container";
+
+			$(select2ContainerSelector).remove();
+
+			sourceEl =  $(this.sourceSelector);
+
+			sourceEl.attr('value-selected','false');
+
+			sourceEl.attr('status','normal');
+
+			this.sourceEl = sourceEl;
+
+
+
+			this.initAvailValueRequestsMap();
+
+			this.initSubElementValuesMaps();
+
+			this.refreshCurrentDataValuesList();
+
+		}
+
+		
+
+		controller.prototype.initCurrentChildList = function() {
+
+			var that = this;
+
+			var resultSubElements = [];
+
+
+
+			if (!(_.isUndefined(this.subElements))) {
+
+				_.each(this.subElements, function(item, key) {
+
+					var source = $(item.sourceBindingSelector).val();
+
+					
+
+					if (!(_.isUndefined(source))) {
+
+						var sourceArray = source.split(item.delimiter);
+
+						var selectedValues = [];
+
+
+
+						sourceArray = sourceArray.filter(function(n){ return n != "" });
+
+
+
+						selectedValues = _.filter(item.valuesMap, function(num) {
+
+							return _.contains(sourceArray, num.value);
+
+						})
+
+
+
+						if (!(_.isUndefined(selectedValues))) {
+
+							item.selectedValues = selectedValues;
+
+						}
+
+					}
+
+
+
+					resultSubElements.push(item);
+
+				});
+
+
+
+				this.subElements = resultSubElements;
+
+			}
+
+		}
+
+
+
+
+
+		controller.prototype.initCurrentDataValuesList = function() {
+
+			var dataValues = $(this.currentValuesSelector).text();
+
+			var availItem, availItemValue, requests, markup;
+
+			markup = "";
+
+			
+
+			if (!(_.isEmpty(dataValues))) {
+
+				requests = JSON.parse(dataValues);
+
+			}
+
+
+
+			this.selectedValuesArray = requests;
+
+			this.updateAvailValuesMap();
+
+			return requests;
+
+		}
+
+
+
+
+
+		controller.prototype.refreshCurrentDataValuesList = function() {
+
+			this.initCurrentDataValuesList();
+
+			this.initCurrentChildList();
+
+			this.showCurrentDataValuesList();
+
+		}
+
+
+
+
+
+		controller.prototype.showCurrentDataValuesList = function() {
+
+			var requests = this.selectedValuesArray;
+
+			var availValueRequestsMap = this.availValueRequestsMap;
+
+			var selectedValues;
+
+			var that = this;
+
+			var markup = "";
+
+			var hasChilds;
+
+			var standardTpl;
+
+			var extTpl;
+
+
+
+			if (!(_.isUndefined(this.showItemTpl))) {
+
+				standardTpl = _.template(this.showItemTpl);
+
+			}
+
+			if (!(_.isUndefined(this.showItemTpl))) {
+
+				extTpl = _.template(this.showChildItemTpl);
+
+			}
+
+
+
+			$(this.currentNodeRequestsSelector).empty();
+
+
+
+			if (!(_.isUndefined(requests))) {
+
+				selectedValues = _.filter(availValueRequestsMap, function(num) {
+
+					return _.contains(requests, num.value)
+
+				});
+
+
+
+				_.each(selectedValues, function(val, key) {
+
+					hasChilds = _.findWhere(that.subElements, {parentId: parseInt(val.value)});
+
+
+
+					if (_.isUndefined(hasChilds)) {
+
+						markup += standardTpl(val);
+
+					} else {
+
+						val.selectedValues = hasChilds.selectedValues;
+
+						markup += extTpl(val);
+
+					}
+
+				});
+
+				$(this.currentNodeRequestsSelector).append(markup);
+
+			}
+
+		}
+
+
+
+
+
+		controller.prototype.initAvailValueRequestsMap = function() { 
+
+			var items, itemValue, ItemText;
+
+			var result = [];
+
+			var availIdsArray = [];
+
+			var baseSelectValueEl = $(this.sourceSelector);
+
+
+
+			items = baseSelectValueEl.find("select option");
+
+
+
+			_.each(items, function (item, key) {
+
+				itemValue = $(item).attr('value');
+
+
+
+				if (!(_.isEmpty(itemValue))) {
+
+					itemText = $(item).text();
+
+					result.push({value: itemValue, text: itemText});
+
+					availIdsArray.push(itemValue);
+
+				}
+
+			});
+
+
+
+			// debugger;
+
+			this.availValueRequestsMap = result;
+
+			this.availIdsArray = availIdsArray;
+
+		}
+
+
+
+
+
+		controller.prototype.initSubElementValuesMaps = function() {
+
+			var that = this;
+
+			var result, type, sourceSelector;
+
+			var newSubElements = [];
+
+
+
+			if (!(_.isUndefined(this.subElements))) {
+
+
+
+				_.each(this.subElements, function(settings){
+
+					type = settings.type;
+
+					sourceSelector = settings.sourceChildSelector;
+
+					settings.valuesMap = [];
+
+					var newValuesMap = [];
+
+
+
+					switch (type) {
+
+						case "multiselection":
+
+							var elsSelector = sourceSelector + " select option";
+
+							var els = $(elsSelector);
+
+
+
+							_.each(els, function(element, key){
+
+								var el = $(element);
+
+								var value = el.attr("value");
+
+								var text = el.text();
+
+
+
+								if (!(_.isEmpty(value))) {
+
+									newValuesMap.push({value: value, text: text});
+
+								}
+
+							});
+
+						break;
+
+						default:
+
+							console.log("No such type for setting value map -- " + type);
+
+					}
+
+					settings.valuesMap = newValuesMap;
+
+					newSubElements.push(settings);
+
+				});
+
+
+
+				this.subElements = newSubElements;
+
+			}
+
+
+
+		}
+
+		
+
+
+
+		controller.prototype.initAddChildNodeEmptyValueRequests = function() {
+
+			$(this.targetSelector).empty();
+
+			this.addNewValueRequestItem();
+
+		}
+
+
+
+
+
+		controller.prototype.addNewValueRequestItem = function(selectedValue, clearCurrent) {
+
+			var wrapper = $(this.targetSelector);
+
+			var newEl, selectEl;
+
+			var uniqueId = _.random(0, 1000000);
+
+
+
+			if (!(_.isUndefined(clearCurrent))) {
+
+				if (clearCurrent) {
+
+					wrapper.empty(); 
+
+				}
+
+			}
+
+
+
+			newEl = this.refreshDropDown(undefined);
+
+			newEl.attr('elid', uniqueId);
+
+
+
+
+
+			if (!(_.isEmpty(selectedValue))){
+
+				newEl = this.preprocessSelect(newEl, selectedValue);
+
+			}
+
+			
+
+			selectEl = newEl.find('.abc-select');
+
+			screen.addComponent(new ABC.Selection(selectEl));
+
+			this.initNewValueRequestItemEvents(selectEl);
+
+
+
+			return selectEl;
+
+		}
+
+
+
+
+
+		controller.prototype.preprocessSelect = function(selectEl, optionIndex) {
+
+			var el;
+
+
+
+			el = this.defineSelectedValue(selectEl, optionIndex);
+
+			el = this.defineChildElements(el, optionIndex);
+
+
+
+			return el;
+
+		}
+
+		
+
+		
+
+		controller.prototype.defineChildElements = function(el, optionIndex) {
+
+			var resultEl;
+
+			var hasChilds = this.hasChildElements(optionIndex)
+
+
+
+			if (!(_.isUndefined(hasChilds))) {
+
+				resultEl = this.renderSelectedSubItems(optionIndex, el);
+
+				
+
+			} else {
+
+				resultEl = el;
+
+			}
+
+
+
+			return resultEl;	
+
+		}		
+
+
+
+
+
+		controller.prototype.hasChildElements = function(index) {
+
+			var res;
+
+			
+
+			res = _.findWhere(this.subElements, {parentId: parseInt(index)});
+
+			
+
+			return res;
+
+		}
+
+
+
+
+
+		controller.prototype.defineSelectedValue = function(el, optionIndex) {
+
+			var item = this.getRequestItem(el);
+
+			var selectedObj = _.findWhere(this.availValueRequestsMap, {value: optionIndex});
+
+			var tpl = _.template("<option selected='true' value='<%= u.value%>'><%= u.text %></option>");
+
+			
+
+			markup = tpl({u: selectedObj});
+
+			el.find('select').append(markup);
+
+
+
+			var btnQueryWrapper = this.buttonsWrapper;
+
+
+
+			el.find(btnQueryWrapper).removeClass('hidden');
+
+			item.attr("value-selected", true);
+
+
+
+			this.defineItemStatus(el);
+
+
+
+			return el;
+
+		}		
+
+
+
+
+
+		controller.prototype.initNewValueRequestItemEvents = function(el) {
+
+			var item = this.getRequestItem(el);
+
+			var removeBtn = item.find('.remove-request-btn');
+
+			var filterBtn = item.find('.add-supervised-orgs');
+
+
+
+			el.off('select2:select').on('select2:select', _.bind(this.selectNewValueRequest, this));
+
+			removeBtn.off('click').on('click', _.bind(this.removeRequestItemConfirm, this));
+
+			filterBtn.off('click').on('click', _.bind(this.showSupercisionsFilter, this));
+
+		}
+
+
+
+		
+
+		controller.prototype.showSupercisionsFilter = function(e) {
+
+			var ids = [];
+
+			var el = $(e.target);
+
+			var parent = $(this.getRequestItem(el));
+
+
+
+			this.selectedSupercisionItem = parent;
+
+			ids = this.getChildValuesOfCurrentNode();
+
+
+
+			if (!(_.isUndefined(this.statusMap))) {
+
+				this.wrapper.trigger("show:supercisionModal", [ids]);
+
+			}
+
+ 		}
+
+		
+
+
+
+		controller.prototype.getChildValuesOfCurrentNode = function() {
+
+			var childs = this.selectedSupercisionItem.find(".child-element");
+
+			var id = this.defineSelectedAttributeId();
+
+			var selectedAttrSettings = this.defineSelectedSubElement(id);
+
+			var anchorCustomAttr = selectedAttrSettings.valueSelector;
+
+			var result = [];
+
+
+
+			if (!(_.isEmpty(childs))) {
+
+				_.each(childs, function(element, key) {
+
+					var child = $(element);
+
+					var value = child.attr(anchorCustomAttr);
+
+
+
+					if (!(_.isEmpty(value))) {
+
+						result.push(value);
+
+					}
+
+				});
+
+			}
+
+			return result;
+
+		}
+
+		
+
+
+
+		controller.prototype.defineSelectedSubElement = function(id) {
+
+			var selectedSettings;
+
+
+
+			if (!(_.isUndefined(this.subElements))) {
+
+				selectedSettings = _.find(this.subElements, function(num) {
+
+					return num.parentId == id;
+
+				});
+
+			}
+
+
+
+			return selectedSettings;
+
+		}
+
+
+
+
+
+		controller.prototype.defineSelectedAttributeId = function(el) {
+
+			var item = this.selectedSupercisionItem;
+
+			var selectedOpt = item.find("select option:selected");
+
+			var id = $(selectedOpt).attr("value");
+
+
+
+			return id;
+
+		}
+
+		
+
+
+
+		controller.prototype.addSubItemsToSelectedNode = function(childIds) {
+
+			var id = this.defineSelectedAttributeId(); 
+
+			var that = this;
+
+			var resSubElements = [];
+
+
+
+			if (!(_.isUndefined(this.subElements))) {
+
+				_.each(that.subElements, function(element, key) {
+
+					if (id == element.parentId) {
+
+						var valuesMap = element.valuesMap;
+
+						var selectedValues = [];
+
+
+
+						selectedValues = _.filter(valuesMap, function(num) {
+
+							return _.contains(childIds, num.value)
+
+						});
+
+
+
+						element.selectedValues = selectedValues;
+
+						that.renderSelectedSubItems();
+
+
+
+					}
+
+					resSubElements.push(element);
+
+				});
+
+
+
+				this.subElements = resSubElements;
+
+			}
+
+		}
+
+		
+
+
+
+		controller.prototype.renderSelectedSubItems = function(id, el) {
+
+			var selectedSubElement, template, tpl, markup, resultEl, childs;
+
+			
+
+			if (_.isUndefined(id)) {
+
+				id = this.defineSelectedAttributeId();
+
+			}
+
+
+
+			if (_.isUndefined(el)) {
+
+				resultEl = this.selectedSupercisionItem;
+
+			} else {
+
+				resultEl = el;
+
+			}
+
+
+
+
+
+			selectedSubElement 	= this.defineSelectedSubElement(id);
+
+			values 				= selectedSubElement.selectedValues;
+
+			tpl 				= selectedSubElement.tpl;
+
+			markup 				= "";
+
+			childs 				= resultEl.find(selectedSubElement.viewChildsWrapperSelector);
+
+
+
+			childs.remove();
+
+
+
+			if (!(_.isEmpty(values))) {
+
+				template = _.template(tpl);
+
+				markup += '<div class="childs-elements-wrapper col-md-12">';
+
+
+
+				_.each(values, function(value) {
+
+					markup += template(value);
+
+				});
+
+
+
+				markup += '</div>';
+
+			}
+
+			resultEl.append(markup);
+
+
+
+			return resultEl;
+
+		}		
+
+
+
+
+
+		controller.prototype.selectNewValueRequest = function(e) {
+
+			var id 		= e.params.data.id;
+
+			var el 		= e.params.data.element;
+
+			var parent 	= $(this.getRequestItem(el));
+
+			var number 	= $(el).closest('.value-requests-selects').find('select').length;
+
+
+
+			if (this.addToModel) {
+
+				var selectName = this.plNewFieldRequestName + (number-1) + this.plNewFieldRequestAttr;
+
+				parent.find('select').attr('name', selectName);
+
+			}
+
+
+
+			if (parent.attr('value-selected') == 'false') {
+
+				parent.attr('value-selected', 'true');
+
+				this.afterSelectProcessing($(el));
+
+			} else {
+
+				this.updateSelectedValuesArray();
+
+				this.defineItemStatus(parent);
+
+			}
+
+		}
+
+
+
+
+
+		controller.prototype.removeRequestItemConfirm = function(e) {
+
+			var btn = $(e.target);
+
+			var parent = btn.closest(".value-requests-selects-wrapper");
+
+			var requestItemForDelete = this.getRequestItem(btn);
+
+			
+
+			this.requestItemForDelete = this.getRequestItem(btn);
+
+
+
+			if (this.handleDeleteButton) {
+
+				parent.trigger('delete:request');
+
+			} else {
+
+				this.removeRequestItem();
+
+			}
+
+		}
+
+		
+
+
+
+		controller.prototype.removeRequestItem = function() {
+
+			this.requestItemForDelete.remove();
+
+			this.updateSelectedValuesArray();
+
+		}
+
+
+
+
+
+		controller.prototype.afterSelectProcessing = function(el) {
+
+			var item = this.getRequestItem(el);
+
+			var parent = item.closest('.value-requests-selects');
+
+			var parentSelector = '#' + parent.attr('id');
+
+
+
+			this.showValueDeleteButton(item);
+
+			this.defineItemStatus(item);
+
+			this.updateSelectedValuesArray();
+
+			this.addNewValueRequestItem();
+
+		}
+
+
+
+		
+
+		controller.prototype.defineItemStatus = function(el) {
+
+			var selectedOpt = el.find("select option:selected");
+
+			var id = selectedOpt.attr("value");
+
+			var supercisionOrgs;
+
+
+
+			if (!(_.isUndefined(this.statusMap))) {
+
+				_.each(this.statusMap, function(item, key) {
+
+					if (id == item.id) {
+
+						el.attr('status', item.status); 
+
+					}
+
+					else {
+
+						el.attr('status', 'normal');
+
+						supercisionOrgs = el.find(".childs-elements-wrapper");
+
+						supercisionOrgs.remove();
+
+					}
+
+				});
+
+			}
+
+		}
+
+		
+
+
+
+		controller.prototype.getRequestItem = function(element) {
+
+			var el = $(element);
+
+			return el.closest('.value-request-el');
+
+		}
+
+
+
+
+
+		controller.prototype.getRequestItemInnerEl = function(item, selector) {
+
+			return item.find(selector);
+
+		}
+
+
+
+
+
+		controller.prototype.showValueDeleteButton = function(parent) {
+
+			var wrapper = parent.find(this.buttonsWrapper);
+
+
+
+			wrapper.removeClass('hidden'); 
+
+		}
+
+		
+
+
+
+		controller.prototype.updateSelectedValuesArray = function() {
+
+			var selectedOptionsSelector = this.targetSelector + " select option:selected";
+
+			var options = $(selectedOptionsSelector);
+
+			selectedValuesArray = [];
+
+
+
+			_.each(options, function(value, key) {
+
+				var id = $(value).attr('value');
+
+
+
+				if (!(_.isEmpty(id))) {
+
+					selectedValuesArray.push(id);
+
+				}
+
+			});
+
+
+
+			this.selectedValuesArray = selectedValuesArray;
+
+			this.updateAvailValuesMap();
+
+		}
+
+
+
+
+
+		controller.prototype.updateAvailValuesMap = function() {
+
+			var result = [];
+
+			var that = this;
+
+
+
+			result = _.filter(this.availValueRequestsMap, function(num) {
+
+				return !_.contains(that.selectedValuesArray, num.value)
+
+			});
+
+
+
+			this.availValuesMap = result;
+
+			this.refreshDropDownItems();
+
+		}
+
+
+
+
+
+		controller.prototype.getNewOptionsMarkup = function() {
+
+			var tpl = _.template("<%_.each(values, function (u) {%><option value='<%= u.value%>'><%= u.text %></option><%})%>");
+
+			var markup = tpl({values: this.availValuesMap});
+
+
+
+			return markup;
+
+		}
+
+
+
+		
+
+		controller.prototype.refreshDropDown = function(element) {
+
+			if(_.isUndefined(element)) {
+
+				sampleEl = this.sourceEl.clone();
+
+			} else {
+
+				sampleEl = element;
+
+			}
+
+
+
+			var el = $(sampleEl);
+
+			var uselessOpts = el.find("option:not(:selected)");
+
+			var selectEl = el.find("select");
+
+			var selectUi = el.find(".select2-container");
+
+			var newOptionsMarkup = this.getNewOptionsMarkup();
+
+
+
+			uselessOpts.remove();
+
+			selectEl.append(newOptionsMarkup);
+
+			selectUi.remove();
+
+
+
+
+
+			if(_.isUndefined(element)) {
+
+				el.appendTo(this.targetSelector);
+
+			} 
+
+
+
+			return el;
+
+		}		
+
+
+
+		
+
+		controller.prototype.refreshDropDownItems = function() {
+
+			var queryString = this.targetSelector + " .abc-select";
+
+			var els = $(queryString);
+
+			var that = this;
+
+
+
+			if (els.length > 0) {
+
+				_.each(els, function(element, key) {
+
+					var el = that.refreshDropDown(element);
+
+
+
+					screen.addComponent(new ABC.Selection(el));
+
+					that.initNewValueRequestItemEvents(el);
+
+				});
+
+			}
+
+		}
+
+
+
+
+
+		controller.prototype.updateValueFieldsSelects = function() {
+
+			var item, selectedIndex;
+
+			var that = this;
+
+
+
+			$(this.targetSelector).empty();
+
+
+
+			if (!(_.isEmpty(this.selectedValuesArray))) {
+
+				_.each(this.selectedValuesArray, function (value,key) {
+
+					item = that.addNewValueRequestItem(value);
+
+				});
+
+			}
+
+			this.addNewValueRequestItem();
+
+		}
+
+
+
+
+
+		controller.prototype.initCurrnetNodeDataValues = function() { 
+
+			this.updateAvailValuesMap();
+
+			this.updateValueFieldsSelects();
+
+		}
+
+
+
+
+
+		controller.prototype.setSelectedValuesArray = function(array) {
+
+			this.selectedValuesArray = array;
+
+		}
+
+
+
+
+
+		controller.prototype.combineAndSetCurrentSelectedDataQuestions = function() {
+
+			var values 			= _.uniq(this.selectedValuesArray);
+
+			var stringValues;
+
+
+
+			if (!(_.isUndefined(this.targetSelectedSelector))) {
+
+				if (!(_.isEmpty(values))) {
+
+					stringValues 	= JSON.stringify(values);
+
+				}
+
+				$(this.targetSelectedSelector).val(values);
+
+			}
+
+		}
+
+
+
+
+
+		controller.prototype.combineAndSetSelectedChilds = function() {
+
+			var childsSelector, childs, childValues, subElementChildsString, uniqueChildValues, targetBinding;
+
+			var that = this;
+
+
+
+			if (!(_.isUndefined(this.subElements))) {
+
+				_.each(this.subElements, function(subElement, key) {
+
+					targetBinding = $(subElement.targetBindingSelector);
+
+					childsSelector = that.targetSelector + " .child-element" + "[" + subElement.valueSelector + "]"; 
+
+					childs = $(childsSelector);
+
+
+
+					if (childs.length > 0) {
+
+						childValues = [];
+
+						_.each(childs, function(child, key) {
+
+							el = $(child);
+
+							childValues.push(el.attr(subElement.valueSelector));
+
+						});
+
+					}
+
+					
+
+					if (!(_.isEmpty(childValues))) {
+
+						uniqueChildValues = _.uniq(childValues);
+
+						subElementChildsString = uniqueChildValues.join(subElement.delimiter);
+
+					} else {
+
+						subElementChildsString = [];
+
+					}
+
+
+
+					targetBinding.val(subElementChildsString);
+
+				});
+
+			}
+
+		}
+
+		
+
+
+
+		return controller;
+
+	})();
+
+	return controller;
+
+});

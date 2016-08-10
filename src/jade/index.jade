@@ -4,21 +4,29 @@ include ./mixins/mixins
 block content
 	h2 Dauphin: duplicate and collect!
 
-	.core-wrapper.form-group
+	.core-wrapper
 
+	.management
+		.row
+			.col-md-2.label 
+				a.btn.btn-primary.parse-datas(href="javascript:void(0)", role="button") Parse datas 
+			.input-wrapper.col-md-5
+				input.form-control.parsed-datas-output(type="text") 
+		
 
-	.initial-node-wrapper
-		.initial-node.clearfix
-			.node-elements.node-cell
-				.row.form-line
-					label.col-md-5.label Your name
-					.input-wrapper.col-md-7
-						input.form-control.name(type="text",placeholder="Your name here") 
-				.row.form-line
-					label.col-md-5.label Your surname
-					.input-wrapper.col-md-7
-						input.form-control.surname(type="text",placeholder="Your surname here") 
-			.node-management.node-cell
-				a.btn.btn-primary.add-node(href="javascript:void(0)", role="button") Add 
-				a.btn.btn-primary.delete-node(href="javascript:void(0)", role="button") Delete 
+	.hidden
+		.initial-node-wrapper
+			.initial-node.clearfix
+				.node-elements.node-cell
+					.row.form-line
+						label.col-md-5.label Your name
+						.input-wrapper.col-md-7
+							input.form-control.name(type="text",placeholder="Your name here",dataattr="name") 
+					.row.form-line
+						label.col-md-5.label Your surname
+						.input-wrapper.col-md-7
+							input.form-control.surname(type="text",placeholder="Your surname here",dataattr="surname") 
+				.node-management.node-cell
+					a.btn.btn-primary.add-node.hidden(href="javascript:void(0)", role="button") Add 
+					a.btn.btn-primary.delete-node(href="javascript:void(0)", role="button") Delete 
 	

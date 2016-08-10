@@ -26,3 +26,12 @@ html, body {
 
 .node-management {margin-top: 23px; margin-left: 20px;}
 .node-management .btn {margin-left: 10px;}
+
+
+[last-item="true"] .add-node {
+	display: inline-block !important;
+}
+
+[last-item="false"] .add-node {
+	display: none !important;
+}

@@ -17,7 +17,7 @@ require.config({
   //     deps:["jquery"]
 });
 
-require(["jquery","underscore","app"],  
-function($, _, App) {
+require(["jquery","underscore","duplicator" ,"app"],  
+function($, _, Duplicator, App) {
    
 });

@@ -14,7 +14,7 @@ var sequence = require('gulp-sequence');
 var paths = {
   js :   {src : ['src/scripts/*.js'],      dest : 'build/scripts' },
   jade : {src : ['src/jade/**/*.jade'],      dest : 'build' },
-  sass : {src : ['src/styles/**/*.scss'],      dest : 'build/styles' },
+  sass : {file: ['src/styles/styles.scss'], src : ['src/styles/**/*.scss'],      dest : 'build/styles' },
   prodfiles : ["build/*.html", "build/scripts/*.js", "build/styles/*.css"],
   images: {src: ['src/images/*.*'],        dest : 'build/images'},
   // video: {src: ['src/video/zagreby-intro.mp4'], dest : 'build/video'}
@@ -69,7 +69,7 @@ gulp.task('compile:jade', function() {
 
 
 gulp.task('compile:sass', function () {
-  return gulp.src(paths.sass.src)
+  return gulp.src(paths.sass.file)
     .pipe(sass().on('error', sass.logError))
     .pipe(gulp.dest(paths.sass.dest));
 });
