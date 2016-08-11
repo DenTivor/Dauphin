@@ -1,4 +1,5 @@
 define(['duplicator'], function(Duplicator) {
+  var json = '[{"name":"John","surname":"Doe"},{"name":"Agata","surname":"Rowson"},{"name":"John","surname":"Merelinc"},{"name":"Rodrigo","surname":"Fereros"}]';
 
   var settings = {
   	name: 'firstNode',
@@ -24,5 +25,10 @@ define(['duplicator'], function(Duplicator) {
 
   $(".parse-datas").on("click", function() {
     nodeDuplicator.getData();
+  });
+
+
+  $(".load-datas").on("click", function() {
+    nodeDuplicator.loadData(json);
   });
 });

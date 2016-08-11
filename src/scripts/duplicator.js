@@ -25,19 +25,49 @@ return (function(){
 	}	
 
 
-	controller.prototype.addNode = function() {
+	controller.prototype.addNode = function(data) {
 		var newEl = this.initialEl.clone();
-		newEl = this.preprocessNewElement(newEl);
+		newEl = this.preprocessNewElement(newEl, data);
 
 		this.targetWrapperEl.append(newEl);
 	}
 
 
-	controller.prototype.preprocessNewElement = function(el) {
+	controller.prototype.preprocessNewElement = function(el, data) {
 		el.attr("node-wrapper", "");
 		el.attr("last-item","true");
 
-		var el = this.bindButtonsActions(el);
+		if (!(_.isUndefined(data))) {
+			el = this.applyNodeData(el, data);
+		}
+
+		el = this.bindButtonsActions(el);
+		return el;
+	}
+
+
+	controller.prototype.applyNodeData = function(el, data) {
+		var that = this;
+		var type, selector, arraykey;
+		var value;
+		var targetEl;
+
+		_.each(this.dataElements, function(element) {
+			type = element.type;
+			selector = element.selector;
+			arraykey = element.arraykey;
+			value = data[arraykey];
+			targetEl = $(el).find(selector);
+
+			switch (type) {
+				case "input": 
+					targetEl.val(value);
+					break;
+				default:
+					console.log("There is no defined data setter for element");
+			}
+		});
+
 		return el;
 	}
 
@@ -61,7 +91,7 @@ return (function(){
 	controller.prototype.onAddButtonClick = function(e) {
 		$("[last-item]").attr("last-item", "false");
 		this.addNewNodeItem(e);
-		this.remarkupLastItemModes();
+		this.remarkNodesAttributes();
 	}
 
 
@@ -69,18 +99,22 @@ return (function(){
 		var node = this.getNodeItem(e.target);
 		node.remove();
 
-		this.remarkupLastItemModes();
+		this.remarkNodesAttributes();
 	}
 
 
-	controller.prototype.remarkupLastItemModes = function() {
+	controller.prototype.remarkNodesAttributes = function() {
 		var nodes = $("[last-item]");
 		var length = nodes.length;
 
 		if (length > 0) {
 			var lastNode = $(nodes[length-1]);
 			lastNode.attr("last-item", "true");
+
+			nodes.splice(length-1, 1);
+			nodes.attr("last-item", "false");
 		}
+
 	}
 
 
@@ -173,9 +207,37 @@ return (function(){
 		return result;
 	}
 
+
+	controller.prototype.loadData = function(json) {
+		var datas = this.parseLoadedObject(json);
+		var that = this;
+
+		this.cleanTargetWrapper();
+
+		_.each(datas,  function(data){
+			that.addNode(data);
+		});
+
+		this.remarkNodesAttributes();
+	}
+
+
+	controller.prototype.parseLoadedObject = function(json) {
+		var result = JSON.parse(json);
+
+		return result;
+	}
+
+
+	controller.prototype.cleanTargetWrapper = function() {
+		this.targetWrapperEl.empty();
+	}
+
+
 	// controller.prototype.someFunction = function() {
 
 	// }
+
 	return controller;
 })();
 
