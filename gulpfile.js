@@ -1,9 +1,4 @@
-// import browserSync from 'browser-sync';
 var gulp   = require('gulp');
-// var tsc    = require('gulp-tsc');
-// var shell  = require('gulp-shell');
-// var runseq = require('run-sequence');
-// var tslint = require('gulp-tslint');
 var jade = require('gulp-jade');
 var browserSync = require('browser-sync');
 var clean = require('gulp-clean');
@@ -98,14 +93,3 @@ gulp.task('copy:images', function() {
 //   return gulp.src(paths.video.src)
 //    .pipe(gulp.dest(paths.video.dest));
 // });
-
-
-
-
-
-
-
-
-
-
-

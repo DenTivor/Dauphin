@@ -1,5 +1,5 @@
 {
-  "name": "drupal-bootstrap-initial",
+  "name": "Dauphin",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -8,11 +8,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@bitbucket.org/DenTivor/drupal-bootstrap-initial-theme.git"
+    "url": "git@github.com:DenTivor/Dauphin.git"
   },
-  "author": "",
+  "author": "Roman Alekseev",
   "license": "ISC",
-  "homepage": "https://bitbucket.org/DenTivor/drupal-bootstrap-initial-theme#readme",
+  "homepage": "https://github.com/DenTivor/Dauphin",
   "devDependencies": {
     "bower": "^1.7.7",
     "browser-sync": "^2.11.1",

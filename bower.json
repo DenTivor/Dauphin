@@ -1,5 +1,5 @@
 {
-  "name": "ig-parser",
+  "name": "Dauphin",
   "main": "app/build/index.js",
   "license": "MIT",
   "ignore": [
@@ -11,9 +11,7 @@
   ],
   "dependencies": {
     "bootstrap-sass": "bootstrap-sass-official#^3.3.6",
-    "backbone": "^1.3.3",
     "lodash": "^4.11.2",
-    "requirejs": "^2.2.0",
-    "jquery-mousewheel": "^3.1.13"
+    "requirejs": "^2.2.0"
   }
 }
