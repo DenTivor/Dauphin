@@ -63,6 +63,8 @@ return (function(){
 				case "input": 
 					targetEl.val(value);
 					break;
+				case "dropdown":
+					targetEl.val(value);
 				default:
 					console.log("There is no defined data setter for element");
 			}
@@ -141,6 +143,7 @@ return (function(){
 			result.push(nodeDatas);
 		});
 
+		debugger;
 		parsedResult = this.removeEmptyDatas(result);
 		parsedResult = this.transformParsedData(parsedResult);
 		this.setDatasToTargetElement(parsedResult);
@@ -153,7 +156,7 @@ return (function(){
 		var el = $(node);
 		var that = this;
 		var result = {};
-		var type, dataEl;
+		var type, dataEl, value, targetEl;
 
 		_.each(this.dataElements, function(dataElement) {
 			type = dataElement.type;
@@ -161,7 +164,18 @@ return (function(){
 
 			switch (type) {
 				case "input":
-					result[dataElement.arraykey] = $(dataEl).val();
+					value = $(dataEl).val();
+					result[dataElement.arraykey] = value;
+				break;
+				case "dropdown":
+					targetEl = $(dataEl).find("option:selected");
+					value = $(targetEl).attr("value");
+					
+					if (_.isUndefined(value)) {
+						value = "";
+					}
+
+					result[dataElement.arraykey] = value;
 				break;
 				default:
 					console.log("Can't define node type during parsing datas");
@@ -195,7 +209,7 @@ return (function(){
 
 		_.each(datas, function(data) {
 			values = _.values(data);
-			filterResult = _.every(values, function(num) {return num != ""});
+			filterResult = _.some(values, function(num) {return num != ""});
 			
 			if (filterResult) {
 				result.push(data);

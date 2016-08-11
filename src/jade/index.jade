@@ -28,6 +28,16 @@ block content
 						label.col-md-5.label Your surname
 						.input-wrapper.col-md-7
 							input.form-control.surname(type="text",placeholder="Your surname here",dataattr="surname") 
+					.row.form-line
+						.form-group.col-md-12
+							label(for="sel1")
+								| Gender:
+							select.form-control#sel1(dataattr="gender")
+								option(value="") Select...
+								option(value="male") male
+								option(value="female") female
+
+
 				.node-management.node-cell
 					a.btn.btn-primary.add-node.hidden(href="javascript:void(0)", role="button") Add 
 					a.btn.btn-primary.delete-node(href="javascript:void(0)", role="button") Delete 
