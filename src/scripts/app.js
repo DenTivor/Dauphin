@@ -1,5 +1,5 @@
 define(['duplicator'], function(Duplicator) {
-  var json = '[{"name":"John","surname":"Doe","gender":"female"},{"name":"Agata","surname":"Rowson","gender":"male"},{"name":"John","surname":"Merelinc","gender":"female"},{"name":"Ringo","surname":"Starr","gender":""}]';
+  var json = '[{"name":"John","surname":"Doe","gender":"female"},{"name":"Agata","surname":"Rowson","gender":"male"},{"name":"John","surname":"Merelinc","gender":"female"},{"name":"Franchesco","surname":"Gitto","gender":"male","occupation":"student","marital":"single"}]';
 
   var settings = {
   	name: 'firstNode',
@@ -16,6 +16,8 @@ define(['duplicator'], function(Duplicator) {
       {type: 'input', selector: "[dataattr=name]", arraykey: "name"},
       {type: 'input', selector: "[dataattr=surname]", arraykey: "surname"},
       {type: 'dropdown', selector: "[dataattr=gender]", arraykey: "gender"},
+      {type: 'radio', selector: "[dataattr=occupation]", arraykey: "occupation"},
+      {type: 'radio', selector: "[dataattr=marital]", arraykey: "marital"},
     ]
   }
 

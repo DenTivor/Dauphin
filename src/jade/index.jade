@@ -40,33 +40,35 @@ block content
 								option(value="male") male
 								option(value="female") female
 					.col-md-4
-						label.label Occupation
-						.radio: label
-							input(type="radio" name="occupation")
-							| Student
-						.radio: label
-							input(type="radio" name="occupation")
-							| Employer
-						.radio: label
-							input(type="radio" name="occupation")
-							| Self-employer
-						.radio: label
-							input(type="radio" name="occupation")
-							| Homeless
+						.wrapper-el(dataattr="occupation")
+							label.label Occupation
+							.radio: label
+								input(type="radio" value="student" name="occupation")
+								| Student
+							.radio: label
+								input(type="radio" value="employer" name="occupation")
+								| Employer
+							.radio: label
+								input(type="radio" value="selfemployer" name="occupation")
+								| Self-employer
+							.radio: label
+								input(type="radio" value="homeless" name="occupation")
+								| Homeless
 					.col-md-4
-						label.label Marital status
-						.radio: label
-							input(type="radio" name="marital")
-							| Single
-						.radio: label
-							input(type="radio" name="marital")
-							| Married
-						.radio: label
-							input(type="radio" name="marital")
-							| Divorced
-						.radio: label
-							input(type="radio" name="marital")
-							| Widow
+						.wrapper-el(dataattr="marital")
+							label.label Marital status
+							.radio: label
+								input(type="radio" value="single" name="marital")
+								| Single
+							.radio: label
+								input(type="radio" value="married" name="marital")
+								| Married
+							.radio: label
+								input(type="radio" value="divorced" name="marital")
+								| Divorced
+							.radio: label
+								input(type="radio" value="widow" name="marital")
+								| Widow
 
 				.node-management.node-cell
 					a.btn.btn-primary.add-node.hidden(href="javascript:void(0)", role="button") Add 
