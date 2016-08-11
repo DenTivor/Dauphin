@@ -12,6 +12,7 @@
   "dependencies": {
     "bootstrap-sass": "bootstrap-sass-official#^3.3.6",
     "lodash": "^4.11.2",
-    "requirejs": "^2.2.0"
+    "requirejs": "^2.2.0",
+    "underscore": "^1.8.3"
   }
 }

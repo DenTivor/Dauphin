@@ -114,7 +114,6 @@ return (function(){
 			nodes.splice(length-1, 1);
 			nodes.attr("last-item", "false");
 		}
-
 	}
 
 
@@ -242,61 +241,3 @@ return (function(){
 })();
 
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
