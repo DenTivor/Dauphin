@@ -69,19 +69,20 @@ block content
 							.radio: label
 								input(type="radio" value="widow" name="marital")
 								| Widow
-				.node-elements.node-cell.col-md-8
+				.node-elements.node-cell.col-md-8 
 					.col-md-4
 						.form-group.col-md-12
-							label.label Personnel hobby
-							.checkbox: label
-								input(type="checkbox" value="fishing")
-								| Fishin'
-							.checkbox: label
-								input(type="checkbox" value="hunting")
-								| Huntin'
-							.checkbox: label
-								input(type="checkbox" value="loving")
-								| ...and lovin' everyday
+							.wrapper-el(dataattr="hobby")
+								label.label Personnel hobby
+								.checkbox: label
+									input(type="checkbox" value="fishing")
+									| Fishin'
+								.checkbox: label
+									input(type="checkbox" value="hunting")
+									| Huntin'
+								.checkbox: label
+									input(type="checkbox" value="loving")
+									| ...and lovin' everyday
 
 						
 				.node-management.node-cell

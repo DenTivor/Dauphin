@@ -97,9 +97,18 @@ return (function(){
 					break;
 				case "dropdown":
 					targetEl.val(value);
+					break;
 				case "radio":
 					additionalSelector = "[value=" + value + "]";
 					targetEl.find(additionalSelector).prop("checked", true);
+					break;
+				case "checkbox":
+					_.each(value, function(val) {
+						additionalSelector = "[value=" + val + "]";
+						targetEl.find(additionalSelector).prop("checked", true);
+					});
+
+					break;
 				default:
 					console.log("There is no defined data setter for element");
 			}
@@ -190,7 +199,7 @@ return (function(){
 		var el = $(node);
 		var that = this;
 		var result = {};
-		var type, dataEl, value, targetEl;
+		var type, dataEl, value, values, targetEl;
 
 		_.each(this.dataElements, function(dataElement) {
 			type = dataElement.type;
@@ -214,6 +223,16 @@ return (function(){
 				case "radio":
 					targetEl = $(dataEl).find("input[type=radio]:checked");
 					value = targetEl.val();
+
+					result[dataElement.arraykey] = value;
+				break;
+				case "checkbox":
+					values = $(dataEl).find("input[type=checkbox]:checked");
+					value = [];
+
+					_.each(values, function(element) {
+						value.push($(element).val());
+					});
 
 					result[dataElement.arraykey] = value;
 				break;
