@@ -1,5 +1,5 @@
 define(['duplicator'], function(Duplicator) {
-  var json = '[{"name":"John","surname":"Doe","gender":"female","occupation":"homeless","marital":"widow"},{"name":"Agata","surname":"Rowson","gender":"male","occupation":"homeless","marital":"divorced"},{"name":"John","surname":"Merelinc","gender":"female","occupation":"student","marital":"divorced"},{"name":"Franchesco","surname":"Gitto","gender":"male","occupation":"student","marital":"widow"}]';
+  var json = '[{"name":"John","surname":"Doe","gender":"female","occupation":"homeless","marital":"widow","hobby":["fishing"]},{"name":"Agata","surname":"Rowson","gender":"male","occupation":"homeless","marital":"divorced","hobby":["fishing","hunting"]},{"name":"John","surname":"Merelinc","gender":"female","occupation":"student","marital":"divorced","hobby":["loving"]},{"name":"Franchesco","surname":"Gitto","gender":"male","occupation":"student","marital":"widow","hobby":[]}]';
 
   var settings = {
   	name: 'firstNode',
@@ -18,6 +18,7 @@ define(['duplicator'], function(Duplicator) {
       {type: 'dropdown', selector: "[dataattr=gender]", arraykey: "gender"},
       {type: 'radio', selector: "[dataattr=occupation]", arraykey: "occupation"},
       {type: 'radio', selector: "[dataattr=marital]", arraykey: "marital"},
+      {type: 'checkbox', selector: "[dataattr=hobby]", arraykey: "hobby"},
     ],
 
     singleElements: ["radio"]
