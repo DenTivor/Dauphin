@@ -9,6 +9,7 @@ return (function(){
 		this.addButtonSelector = settings.actionButtons.addButtonSelector;
 		this.dataElements = settings.dataElements;
 		this.targetInputDataSelector = settings.targetInputDataSelector;
+		this.singleElements = settings.singleElements;
 
 		this.initialEl;
 		this.targetWrapperEl;
@@ -37,11 +38,41 @@ return (function(){
 		el.attr("node-wrapper", "");
 		el.attr("last-item","true");
 
+
+		el = this.bindButtonsActions(el);
+		el = this.renameSingleElements(el);
+		
 		if (!(_.isUndefined(data))) {
 			el = this.applyNodeData(el, data);
 		}
 
-		el = this.bindButtonsActions(el);
+		return el;
+	}
+
+
+	controller.prototype.renameSingleElements = function(el) {
+		var that = this;
+		var dataElements, els, selector, old, newId;
+
+		_.each(this.singleElements, function(singleElementLabel) {
+			dataElements = _.where(that.dataElements, {type: singleElementLabel});
+
+			if (!(_.isEmpty(dataElements))) {
+				_.each(dataElements, function(dataElement) {
+
+					switch (singleElementLabel) {
+						case "radio":
+							selector = dataElement.selector + " [type=radio]";
+							els = $(el).find(selector);
+							newId = _.random(0, 10000000);
+
+							els.attr("name", newId);
+					}
+				});
+			}
+		});
+
+
 		return el;
 	}
 
