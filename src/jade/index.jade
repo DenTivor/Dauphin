@@ -7,28 +7,31 @@ block content
 	.core-wrapper
 
 	.management
-		.row.line
-			.col-md-2.label 
-				a.btn.btn-primary.parse-datas(href="javascript:void(0)", role="button") Parse datas 
-			.input-wrapper.col-md-5
-				input.form-control.parsed-datas-output(type="text") 
-		.row.line
-			.col-md-12
-				a.btn.btn-primary.load-datas(href="javascript:void(0)", role="button") Load datas 
+		.segment.col-md-12
+			.row.line
+				.col-md-2.label 
+					a.btn.btn-primary.parse-datas(href="javascript:void(0)", role="button") Parse datas 
+				.input-wrapper.col-md-5
+					input.form-control.parsed-datas-output(type="text") 
+			.row.line
+				.col-md-12
+					a.btn.btn-primary.load-datas(href="javascript:void(0)", role="button") Load datas
+
 
 	.hidden
 		.initial-node-wrapper
 			.initial-node.clearfix
-				.node-elements.node-cell
-					.row.form-line
-						label.col-md-5.label Your name
+				.node-elements.node-cell.col-md-8
+					.col-md-6
+						label.col-md-5.label.centered Your name
 						.input-wrapper.col-md-7
 							input.form-control.name(type="text",placeholder="Your name here",dataattr="name") 
-					.row.form-line
-						label.col-md-5.label Your surname
+					.col-md-6
+						label.col-md-5.label.centered Your surname
 						.input-wrapper.col-md-7
 							input.form-control.surname(type="text",placeholder="Your surname here",dataattr="surname") 
-					.row.form-line
+				.node-elements.node-cell.col-md-8
+					.col-md-4
 						.form-group.col-md-12
 							label(for="sel1")
 								| Gender:
@@ -36,7 +39,36 @@ block content
 								option(value="") Select...
 								option(value="male") male
 								option(value="female") female
-
+					.col-md-4
+						.wrapper-el(dataattr="occupation")
+							label.label Occupation
+							.radio: label
+								input(type="radio" value="student" name="occupation")
+								| Student
+							.radio: label
+								input(type="radio" value="employer" name="occupation")
+								| Employer
+							.radio: label
+								input(type="radio" value="selfemployer" name="occupation")
+								| Self-employer
+							.radio: label
+								input(type="radio" value="homeless" name="occupation")
+								| Homeless
+					.col-md-4
+						.wrapper-el(dataattr="marital")
+							label.label Marital status
+							.radio: label
+								input(type="radio" value="single" name="marital")
+								| Single
+							.radio: label
+								input(type="radio" value="married" name="marital")
+								| Married
+							.radio: label
+								input(type="radio" value="divorced" name="marital")
+								| Divorced
+							.radio: label
+								input(type="radio" value="widow" name="marital")
+								| Widow
 
 				.node-management.node-cell
 					a.btn.btn-primary.add-node.hidden(href="javascript:void(0)", role="button") Add 

@@ -9,6 +9,7 @@ return (function(){
 		this.addButtonSelector = settings.actionButtons.addButtonSelector;
 		this.dataElements = settings.dataElements;
 		this.targetInputDataSelector = settings.targetInputDataSelector;
+		this.singleElements = settings.singleElements;
 
 		this.initialEl;
 		this.targetWrapperEl;
@@ -37,11 +38,41 @@ return (function(){
 		el.attr("node-wrapper", "");
 		el.attr("last-item","true");
 
+
+		el = this.bindButtonsActions(el);
+		el = this.renameSingleElements(el);
+		
 		if (!(_.isUndefined(data))) {
 			el = this.applyNodeData(el, data);
 		}
 
-		el = this.bindButtonsActions(el);
+		return el;
+	}
+
+
+	controller.prototype.renameSingleElements = function(el) {
+		var that = this;
+		var dataElements, els, selector, old, newId;
+
+		_.each(this.singleElements, function(singleElementLabel) {
+			dataElements = _.where(that.dataElements, {type: singleElementLabel});
+
+			if (!(_.isEmpty(dataElements))) {
+				_.each(dataElements, function(dataElement) {
+
+					switch (singleElementLabel) {
+						case "radio":
+							selector = dataElement.selector + " [type=radio]";
+							els = $(el).find(selector);
+							newId = _.random(0, 10000000);
+
+							els.attr("name", newId);
+					}
+				});
+			}
+		});
+
+
 		return el;
 	}
 
@@ -50,7 +81,7 @@ return (function(){
 		var that = this;
 		var type, selector, arraykey;
 		var value;
-		var targetEl;
+		var targetEl, additionalSelector;
 
 		_.each(this.dataElements, function(element) {
 			type = element.type;
@@ -59,12 +90,16 @@ return (function(){
 			value = data[arraykey];
 			targetEl = $(el).find(selector);
 
+
 			switch (type) {
 				case "input": 
 					targetEl.val(value);
 					break;
 				case "dropdown":
 					targetEl.val(value);
+				case "radio":
+					additionalSelector = "[value=" + value + "]";
+					targetEl.find(additionalSelector).prop("checked", true);
 				default:
 					console.log("There is no defined data setter for element");
 			}
@@ -143,7 +178,6 @@ return (function(){
 			result.push(nodeDatas);
 		});
 
-		debugger;
 		parsedResult = this.removeEmptyDatas(result);
 		parsedResult = this.transformParsedData(parsedResult);
 		this.setDatasToTargetElement(parsedResult);
@@ -174,6 +208,12 @@ return (function(){
 					if (_.isUndefined(value)) {
 						value = "";
 					}
+
+					result[dataElement.arraykey] = value;
+				break;
+				case "radio":
+					targetEl = $(dataEl).find("input[type=radio]:checked");
+					value = targetEl.val();
 
 					result[dataElement.arraykey] = value;
 				break;

@@ -5,21 +5,25 @@
 html, body {
 }
 
-.form-line {
-	margin-bottom: 10px;
-
-	.label {
-	    line-height: 36px;
-	}
+.label.centered {
+    line-height: 36px;
 }
 
 
 .initial-node {
-	width: 600px;
+	border-bottom: 1px solid #a5a5a5;
+}
+
+.initial-node-wrapper {
+	margin-bottom: 35px;
 }
 
 .node-cell {
 	float: left;
+}
+
+.node-elements {
+	margin-bottom: 15px;
 }
 
 .node-management {margin-top: 23px; margin-left: 20px;}
