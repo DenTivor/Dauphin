@@ -3,9 +3,10 @@ var require = window.require;
 require.config({
   paths: {
     jquery: "../bower_components/jquery/dist/jquery",
-    backbone: "../bower_components/backbone/backbone",
+    // backbone: "../bower_components/backbone/backbone",
     underscore: "../bower_components/underscore/underscore-min",
-    lodash: "../bower_components/lodash/dist/lodash",
+    // lodash: "../bower_components/lodash/dist/lodash",
+    select2: "../bower_components/select2/dist/js/select2.min",
   },
   packages:[
     "view/page"
@@ -17,7 +18,7 @@ require.config({
   //     deps:["jquery"]
 });
 
-require(["jquery","underscore","duplicator" ,"app"],  
-function($, _, Duplicator, App) {
+require(["duplicator" ,"app"],  
+function(Duplicator, App) {
    
 });

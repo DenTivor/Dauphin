@@ -1,4 +1,4 @@
-define(function(require, exports, module) {
+define(["jquery","underscore", "select2"], function($, _, Select2) {
 
 return (function(){
 	function controller(settings) {
@@ -45,6 +45,19 @@ return (function(){
 		if (!(_.isUndefined(data))) {
 			el = this.applyNodeData(el, data);
 		}
+
+		el = this.initDrawableElements(el);
+
+		return el;
+	}
+
+
+	controller.prototype.initDrawableElements = function(el) {
+		// Init basic select 2
+		// debugger;
+		$(el).find(".js-example-basic-single").select2();
+		// debugger;
+
 
 		return el;
 	}
