@@ -1,5 +1,5 @@
 define(['duplicator'], function(Duplicator) {
-  var json = '[{"name":"John","surname":"Doe","gender":"female","occupation":"homeless","marital":"widow","hobby":["fishing"]},{"name":"Agata","surname":"Rowson","gender":"male","occupation":"homeless","marital":"divorced","hobby":["fishing","hunting"]},{"name":"John","surname":"Merelinc","gender":"female","occupation":"student","marital":"divorced","hobby":["loving"]},{"name":"Franchesco","surname":"Gitto","gender":"male","occupation":"student","marital":"widow","hobby":[]}]';
+  var json = '[{"name":"John","surname":"Doe","gender":"female","occupation":"homeless","marital":"widow","hobby":["fishing"],"nativestate":"AK","paymentsystems":[]},{"name":"Agata","surname":"Rowson","gender":"male","occupation":"homeless","marital":"divorced","hobby":["fishing","hunting"],"nativestate":"","paymentsystems":["2c2p","alipay","BitPay","BPAY","DataCash"]},{"name":"John","surname":"Merelinc","gender":"female","occupation":"student","marital":"divorced","hobby":["loving"],"nativestate":"IL","paymentsystems":["BitPay"]},{"name":"Franchesco","surname":"Gitto","gender":"male","occupation":"student","marital":"widow","hobby":[],"nativestate":"WA","paymentsystems":["2c2p","alipay","BitPay"]}]';
 
   var settings = {
   	name: 'firstNode',
@@ -19,6 +19,8 @@ define(['duplicator'], function(Duplicator) {
       {type: 'radio', selector: "[dataattr=occupation]", arraykey: "occupation"},
       {type: 'radio', selector: "[dataattr=marital]", arraykey: "marital"},
       {type: 'checkbox', selector: "[dataattr=hobby]", arraykey: "hobby"},
+      {type: 'select2:single', selector: "[dataattr=nativestate]", arraykey: "nativestate"},
+      {type: 'select2:multiple', selector: "[dataattr=paymentsystems]", arraykey: "paymentsystems"},
     ],
 
     singleElements: ["radio"]

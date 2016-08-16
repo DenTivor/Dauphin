@@ -53,11 +53,7 @@ return (function(){
 
 
 	controller.prototype.initDrawableElements = function(el) {
-		// Init basic select 2
-		// debugger;
 		$(el).find(".js-example-basic-single").select2();
-		// debugger;
-
 
 		return el;
 	}
@@ -104,6 +100,7 @@ return (function(){
 			targetEl = $(el).find(selector);
 
 
+
 			switch (type) {
 				case "input": 
 					targetEl.val(value);
@@ -120,7 +117,16 @@ return (function(){
 						additionalSelector = "[value=" + val + "]";
 						targetEl.find(additionalSelector).prop("checked", true);
 					});
-
+					break;
+				case "select2:single":
+					targetEl.val(value);
+					break;
+				case "select2:multiple":
+					_.each(value, function(val) {
+						// targetEl.val(val);
+						additionalSelector = "[value="+val+"]";
+						targetEl.find(additionalSelector).attr('selected', true);
+					});
 					break;
 				default:
 					console.log("There is no defined data setter for element");
@@ -249,6 +255,26 @@ return (function(){
 
 					result[dataElement.arraykey] = value;
 				break;
+				case "select2:single":
+					targetEl = $(dataEl).find("option:selected");
+					value = $(targetEl).attr("value");
+					
+					if (_.isUndefined(value)) {
+						value = "";
+					}
+
+					result[dataElement.arraykey] = value;
+					break;
+				case "select2:multiple":
+					values = $(dataEl).find("option:selected");
+					value = [];
+
+					_.each(values, function(element) {
+						value.push($(element).attr('value'));
+					});
+
+					result[dataElement.arraykey] = value;
+					break;
 				default:
 					console.log("Can't define node type during parsing datas");
 			}
